@@ -54,5 +54,6 @@ import main.filter
 # sqlalchemy 함 봐보기
 
 
+# 그냥 해보기
 # 아래는 onclick 함수 안에 url_for 함수대신 넣기 위해 싸운 흔적이다.
 #onclick="location.href = '/date/EnableDay?dates={{year}}-{{month}}-{{day}}'"
