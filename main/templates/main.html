@@ -1,0 +1,31 @@
+{% block using_flask %}
+{% endblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>시험삼아 해보는 테스트</title>
+        
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+
+    <body>
+        {% include "navbar.html" %}
+
+        {% block first_body %}
+        {% endblock %}
+
+        <!-- jquery 시작 -->
+        <script src="{{ url_for('static', filename='jquery-3.7.0.min.js') }}"></script>
+        <!-- jquery 끝 -->
+
+        <!-- bootstrap 시작 -->
+        <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+        <!-- jquery 끝 -->
+
+    </body>
+</html>

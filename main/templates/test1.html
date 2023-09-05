@@ -1,0 +1,29 @@
+{% extends "main.html" %}
+{% from "sub.html" import input, textarea, radio %}
+
+{% block first_body %}
+<div class="container">
+    <input type="text" id="userid" name="username" value="111" class="form-control my-3">
+    <form href="/day">
+        <input type="date" name="dates">
+        <p><input type="submit" value="Submit"></p>
+    </form>
+    <br>
+    {{input('password')}}
+    <br>
+    <br>
+    <br>
+    <textarea id="" name="" rows="5" class="form-control"></textarea>
+    <br>
+    {{textarea()}}
+    <br>
+    <br>
+    <div class="form-chack">
+        {{radio('1번', 'ha', 'id1')}}
+        {{radio('2번', 'ha', 'id2')}}
+        {{radio('3번', 'ha', 'id3')}}
+    </div>
+
+    <label>파일을 입력하세요 <input type="file"></label>
+
+{% endblock first_body %}

@@ -1,0 +1,96 @@
+{% extends "main.html" %}
+{% from 'sub.html' import leftarrow, rightarrow %}
+
+{% block first_body %}
+
+{% macro col(dt) %}
+<div class="text-center my-3">
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            {% for i in '일월화수목금토' %}
+                <th>{{i}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for row in range(dt | sdt, dt | edt) | batch(7, '&nbsp;') %}
+        <tr> 
+        {% for a in row %}
+        {% if ((a|int) ==t_list[2]) and (year == t_list[0]) and (month == t_list[1]) %}
+            <td onClick="location.href='/date?dates={{year}}-{{month}}-{{a}}'" class="blinking table-primary"> <!-- class="table-danger table-active"-->
+                {{a | safe}}
+            </td>
+        {% elif year |check(month, a, e_d) %}
+            <td onClick="location.href='/date?dates={{year}}-{{month}}-{{a}}'" class="blinking table-danger"> <!-- class="table-danger table-active"-->
+                {{a | safe}}
+            </td>
+        {% elif ( (a|int) <= 0) %}
+            <td>
+                &nbsp;
+            </td>
+            {% else %}
+            <td onClick="location.href='/date?dates={{year}}-{{month}}-{{a}}'" class="blinking"> <!-- class="table-danger table-active"-->
+                {{a | safe}}
+            </td>
+        {% endif %}
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endmacro %}
+
+<div class="container">
+    <div class="my-3">
+        <div>
+            <h2 class="text-center text-primary">
+                <small><a href="/day?year={{year - 1}}&month={{month}}" class="text-muted">{{year - 1}}</a></small>
+
+                {{leftarrow()}}
+                {{year}}년
+                {{rightarrow()}}
+                
+                <small><a href="/day?year={{year + 1}}&month={{month}}" class="text-muted">{{year + 1}}</a></small>
+            </h2>
+            
+            <h1 class="text-center text-primary"> <!--text-primary-->
+                {% if month - 1 == 0 %}
+                <small><a href="/day?year={{year - 1}}&month=12" class="text-muted">12</a></small>
+                {% else %}
+                <small><a href="/day?year={{year}}&month={{month - 1}}" class="text-muted">{{month - 1}}</a></small>
+                {% endif %}
+
+                {{leftarrow('mx-1')}}
+                {{month}}월
+                {{rightarrow('mx-1')}}
+
+                {% if month + 1 == 13 %}
+                <small><a href="/day?year={{year + 1}}&month=1" class="text-muted">1</a></small>
+                {% else %}
+                <small><a href="/day?year={{year}}&month={{month + 1}}" class="text-muted">{{month + 1}}</a></small>
+                {% endif %}
+            </h1>
+        </div>
+        <div class="border-bottom"></div>
+    {% set dt = '%s-%s-01' %(year, month) %}
+    {{col(dt)}}
+    </div>
+    <div>
+        <form href="/date">
+            <input type="date" name="dates" class="form-control my-2">
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </form>
+    </div>
+
+    <button type="button" onClick="location.href='/day?year={{t_list[0]}}&month={{t_list[1]}}'" class="btn btn-secondary my-3">오늘 날짜</button>
+    {% if g.user %}
+    <h5>안녕하세요 {{ g.user.name }}님!</h5>    
+    {% endif %}
+    <h5>오늘의 날짜는 {{t_list[0]}}년 {{t_list[1]}}월 {{t_list[2]}}일 입니다.</h5>
+</div>
+
+
+
+{% endblock first_body %}

@@ -1,0 +1,53 @@
+{% extends "main.html" %}
+{% block first_body %}
+
+{% if come_people_name_list != False %}
+<div class=" container row row-cols-1 row-cols-md-3 g-4 my-3 mx-1">
+    {% for name in come_people_name_list %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mt-2">{{name}}</h5>
+            </div>
+            <div class="card-body">
+                <P>오늘의 과자:</P>
+                {% if (not g.user) or (name != g.user.username) %}
+                {% include "form_errors.html" %}
+                <ul>
+                    {% for each_data in snack_all_data %}
+                        {% if each_data.id_user == name %}
+                        <li>{{each_data.content}}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <textarea disabled
+                    name="snack_content" id ="snack_content" class="form-control mb-2"></textarea>
+                {% else %}
+                <form method="post">
+                    <ul>
+                        {% for each_data in snack_all_data %}
+                            {% if each_data.id_user == name %}
+                            <li>{{each_data.content}}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {{ form.csrf_token }}
+                    <textarea name="snack_content" id ="snack_content" class="form-control mb-2"></textarea>
+                    <button type="submit" class="btn btn-primary">내용등록</button>
+                </form>
+                {% endif %} 
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="container mt-3">
+    <h3>오늘은 아무도 파인만을 오지 않습니다 :( </h3>
+    <h5>너무하네요....</h5>
+    <a href="{{ url_for('main.index') }}"><button type="button" class="btn btn-info">돌아가기</button></a>
+</div>
+{% endif %}
+
+{% endblock first_body %}

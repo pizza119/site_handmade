@@ -1,0 +1,103 @@
+{% extends "main.html" %}
+
+{% block using_flask %}
+{%with messages = get_flashed_messages()%}
+{%if messages %}
+    <script type="text/javascript">
+        alert("{{messages[-1]}}");
+    </script>
+{%endif%}
+{%endwith%}
+{% endblock using_flask %}
+
+
+{% block first_body %}
+<h1 class="text-center my-3 mb-3">
+    {{year}}년 {{month}}월 {{day}}일
+</h1>
+<div class="container border-top">
+    <a href="{{ url_for('date.enableDay')+'?dates'+'=%s-%s-%s' %(year, month, day) }}"><button type="button" class="btn btn-info my-3">
+        파인만 하는날!!!</button></a>
+    {% if enable_feynman %}
+    <br>
+    <br>
+    <div class="border-bottom">
+        <a href="{{ url_for('date.record')+'?dates'+'=%s-%s-%s' %(year, month, day)+'&come=T' }}"><button type="button" class="btn btn-success my-2 mx-2">갈 수 있다</button></a>
+        {% for people in c_p_list %}
+        {{people}}
+        {% endfor %}
+    </div>
+    <br>
+    <div class="border-bottom">
+        <a href="{{ url_for('date.record')+'?dates'+'=%s-%s-%s' %(year, month, day)+'&come=F' }}"><button type="button" class="btn btn-danger my-2 mx-2">못간다</button></a>
+        {% for people in n_c_p_list %}
+        {{people}}
+        {% endfor %}
+    </div>
+    <br>
+    <a href="{{ url_for('date.snack')+'?dates'+'=%s-%s-%s' %(year, month, day) }}"><div class="card mb-3">
+        <img src="..\..\static\image\cooki3-1.jpg" class="card-img-top" alt="cookie">
+        <div class="card-body">
+            <h5 class="card-title">따봉과자</h5>
+            <p class="card-text">오늘 파인만을 나온다면 먹고싶은 과자를 3천원 이내로 말해 주십시오.</p>
+        </div>
+    </div></a>
+    {% endif %}
+    
+    <br>
+    {% if year=='2023' and month=='9' and day=='18' %}
+        <h4>오늘은 그가 군대를 가는 날입니다. 부디 추보를 해주시기 바랍니다.</h4>
+    {% endif %}
+    <br>
+    {% for content in contents_list %}
+    <div class="card mb-3"> 
+        <div class="card-header">
+            <h5 class="card-title mt-2">{{ content.Title }}</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ content.content }}</p>
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            <div class="d-flex justify-content-end">
+                <div class="badge badge-light text-muted">
+                    <font size=3>-{{ name[loop.index0] }}-</font>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <br>      
+    <h3>내용 입력하기</h3>
+    <div class="border-bottom mb-2"></div>
+    <div class="card">
+        <form action="{{ url_for('date.comment', year=year, month=month, day=day) }}" method="post">
+            {{ form.csrf_token }}
+            <div class="card-header">
+                <label for="Title" class="form-label mt-2"><h5>제목</h5></label>
+                <input {% if not g.user %}disabled{% endif %}
+                    type="text" id="Title" name="Title" class="form-control mb-2" aria-describedby="passwordHelpBlock">
+                {% if get_flashed_messages() %}
+                <div id="passwordHelpBlock" class="form-text text-danger">
+                    제목을 기입하여 주세요.
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <label for="content" class="form-label"><h5 class="card-title">내용</h5></label>
+                <textarea {% if not g.user %}disabled{% endif %}
+                    name="content" id ="content" class="form-control mb-2" rows="10"></textarea>
+                {% if get_flashed_messages() %}
+                <div id="passwordHelpBlock" class="form-text text-danger my-2">
+                    내용을 기입하여 주세요.
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">내용등록</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+<h5>&nbsp;</h5>
+
+
+{% endblock first_body %}
