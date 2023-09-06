@@ -18,7 +18,7 @@
         {{ form.csrf_token }}
         {% include "form_errors.html" %}
         <div class="mb-3">
-            <label for="nickname">아이디</label>
+            <label for="nickname">아이디(닉네임)</label>
             <input type="text" class="form-control" name="nickname" id="nickname"
                    value="{{ form.nickname.data or '' }}">
         </div>
