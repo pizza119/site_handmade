@@ -15,34 +15,41 @@ naming_convention = {
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate()
 
-app = Flask(__name__)
-app.config.from_envvar('APP_CONFIG_FILE')
+def create_app():
+    app = Flask(__name__)
+    app.config.from_envvar('APP_CONFIG_FILE')
 
-#ORM
-db.init_app(app)
-if app.config['SQLALCHEMY_DATABASE_URI'].startswith("sqlite"):
-    migrate.init_app(app, db, render_as_batch=True)
-else:
-    migrate.init_app(app, db)
-from . import models
+    #ORM
+    db.init_app(app)
+    if app.config['SQLALCHEMY_DATABASE_URI'].startswith("sqlite"):
+        migrate.init_app(app, db, render_as_batch=True)
+    else:
+        migrate.init_app(app, db)
+    from . import models
 
-'''
-@app.route('/')
-def first():
-    return redirect(url_for('day.day'))
-'''
+    '''
+    @app.route('/')
+    def first():
+        return redirect(url_for('day.day'))
+    '''
 
-#블루프린트
-from .views import dates, day, main_views, auth
-app.register_blueprint(dates.bp)
-app.register_blueprint(day.bp)
-app.register_blueprint(auth.bp)
-app.register_blueprint(main_views.bp)
+    #필터
+    from main.filter import sdt, edt, month, check
+    app.jinja_env.filters["sdt"] = sdt
+    app.jinja_env.filters["edt"] = edt
+    app.jinja_env.filters["month"] = month
+    app.jinja_env.filters["check"] = check
+
+    #블루프린트
+    from .views import dates, day, main_views, auth
+    app.register_blueprint(dates.bp)
+    app.register_blueprint(day.bp)
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(main_views.bp)
+
+    return app
 
 
-#필터
-import main.filter
-#app.jinja_env.filters["sdt"] = sdt
 
 
 # -> 앞으로 할일
