@@ -86,7 +86,11 @@
 
     <button type="button" onClick="location.href='/day?year={{t_list[0]}}&month={{t_list[1]}}'" class="btn btn-secondary my-3">오늘 날짜</button>
     {% if g.user %}
-    <h5>안녕하세요 {{ g.user.name }}님!</h5>    
+        {% if (g.user.name == "오준원") or (g.user.name == "오자우") %}
+        <h5>안녕하세요 오징어님!</h5>    
+        {% else %}
+        <h5>안녕하세요 {{ g.user.name }}님!</h5>    
+        {% endif %}
     {% endif %}
     <h5>오늘의 날짜는 {{t_list[0]}}년 {{t_list[1]}}월 {{t_list[2]}}일 입니다.</h5>
 </div>

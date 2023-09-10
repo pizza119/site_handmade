@@ -49,6 +49,7 @@
         <h4>오늘은 그가 군대를 가는 날입니다. 부디 추보를 해주시기 바랍니다.</h4>
     {% endif %}
     <br>
+
     {% for content in contents_list %}
     <div class="card mb-3"> 
         <div class="card-header">
@@ -57,6 +58,10 @@
         <div class="card-body">
             <p class="card-text">{{ content.content }}</p>
             <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            {% if (content.id_user == g.user.id) or (g.user.name == "김민경") or (g.user.name == "양승빈") %}
+            <a href="{{ url_for('date.delete_comment_function', comment_id = content.id)+'?dates'+'=%s-%s-%s' %(year, month, day) }}"  
+            class="btn btn-sm btn-outline-secondary">삭제</a>
+            {% endif %}
             <div class="d-flex justify-content-end">
                 <div class="badge badge-light text-muted">
                     <font size=3>-{{ name[loop.index0] }}-</font>

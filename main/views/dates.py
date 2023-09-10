@@ -11,7 +11,7 @@ bp = Blueprint('date', __name__, url_prefix='/date')
 @bp.route('/')
 def date():
     form = Day_Comment()
-    year, month, day = request.args.get('dates', "기본값 입력", str).split('-')
+    year, month, day = request.args.get('dates', "2023-9-18", str).split('-')
     date = year + ',' + month + ',' + day
     # 오는사람 안오는사람 구분하기
     member = ComeMenber.query.filter_by(date=date).first()
@@ -38,7 +38,7 @@ def date():
 @bp.route("/EnableDay")
 @login_required
 def enableDay():
-    year, month, day = request.args.get('dates', "기본값 입력", str).split('-')
+    year, month, day = request.args.get('dates', "2023-9-18", str).split('-')
     e_d = EnableDay.query.filter_by(year=year, month=month, day = day).first()
     days = EnableDay(year=year, month=month, day = day)
     if e_d:
@@ -52,7 +52,7 @@ def enableDay():
 @bp.route('/Record')
 @login_required
 def record():
-    year, month, day = request.args.get('dates', "기본값 입력", str).split('-')
+    year, month, day = request.args.get('dates', "2023-9-18", str).split('-')
     come_notcome = request.args.get('come', "T", str)
     date = year + ',' + month + ',' + day
     come_people = ComeMenber.query.filter_by(date=date).first()
@@ -93,10 +93,30 @@ def record():
         return redirect( url_for('date.date')+"?dates=%s-%s-%s" %(year, month, day) )
 
 
+@bp.route('/Comment/<string:year>/<string:month>/<string:day>', methods = ("GET","POST"))
+@login_required
+def comment(year, month, day):
+    date_list = [year, month, day]
+    date_input = ','.join(date_list)
+    form = Day_Comment()
+    if request.method == 'POST' and form.validate_on_submit():    
+        user = User.query.filter_by(username=g.user.username).first()
+        text = EnableDay_comment(a_user = user, Title = form.Title.data , content = form.content.data, date = date_input)
+        db.session.add(text)
+        db.session.commit()
+    elif (not form.Title.data) and (not form.content.data):    
+        flash("제목과 내용은 반드시 기입해야 합니다.")
+    elif not form.Title.data:
+        flash("제목은 반드시 기입해야 합니다.")
+    elif not form.content.data:
+        flash("내용은 반드시 기입해야 합니다.")
+    return redirect( url_for('date.date')+"?dates=%s-%s-%s" %(year, month, day) )
+
+
 @bp.route('/Snack', methods = ("GET","POST"))
 @login_required
 def snack():
-    year, month, day = request.args.get('dates', "기본값 입력", str).split('-')
+    year, month, day = request.args.get('dates', "2023-9-18", str).split('-')
     date = year + ',' + month + ',' + day
     come_people = ComeMenber.query.filter_by(date=date).first()
     if come_people:
@@ -127,22 +147,21 @@ def snack():
                            year = year, month = month, day = day)
 
 
-
-@bp.route('/Comment/<string:year>/<string:month>/<string:day>', methods = ("GET","POST"))
+@bp.route('/Delete_snack/<int:snack_id>', methods = ("GET","POST"))
 @login_required
-def comment(year, month, day):
-    date_list = [year, month, day]
-    date_input = ','.join(date_list)
-    form = Day_Comment()
-    if request.method == 'POST' and form.validate_on_submit():    
-        user = User.query.filter_by(username=g.user.username).first()
-        text = EnableDay_comment(a_user = user, Title = form.Title.data , content = form.content.data, date = date_input)
-        db.session.add(text)
-        db.session.commit()
-    elif (not form.Title.data) and (not form.content.data):    
-        flash("제목과 내용은 반드시 기입해야 합니다.")
-    elif not form.Title.data:
-        flash("제목은 반드시 기입해야 합니다.")
-    elif not form.content.data:
-        flash("내용은 반드시 기입해야 합니다.")
+def delete_snack_function(snack_id):
+    year, month, day = request.args.get('dates', "2023-9-18", str).split('-')
+    delete_snack = Each_snack.query.filter_by(id=snack_id).first()
+    db.session.delete(delete_snack)
+    db.session.commit()
+    return redirect( url_for('date.snack')+"?dates=%s-%s-%s" %(year, month, day) )
+
+
+@bp.route('/Delete_comment/<int:comment_id>', methods = ("GET","POST"))
+@login_required
+def delete_comment_function(comment_id):
+    year, month, day = request.args.get('dates', "2023-9-18", str).split('-')
+    delete_comment = EnableDay_comment.query.filter_by(id=comment_id).first()
+    db.session.delete(delete_comment)
+    db.session.commit()
     return redirect( url_for('date.date')+"?dates=%s-%s-%s" %(year, month, day) )

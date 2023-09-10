@@ -1,0 +1,7 @@
+feynman.db
+
+__pycache__
+
+migrations
+
+*.pyc

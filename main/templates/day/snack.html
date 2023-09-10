@@ -5,29 +5,40 @@
 <div class=" container row row-cols-1 row-cols-md-3 g-4 my-3 mx-1">
     {% for name in come_people_name_list %}
     <div class="col">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-header">
                 <h5 class="card-title mt-2">{{name}}</h5>
             </div>
             <div class="card-body">
                 <P>오늘의 과자:</P>
                 {% if (not g.user) or (name != g.user.username) %}
-                {% include "form_errors.html" %}
                 <ul>
                     {% for each_data in snack_all_data %}
-                        {% if each_data.id_user == name %}
-                        <li>{{each_data.content}}</li>
+                        {% if each_data.username_user == name %}  
+                        <li>
+                            {{each_data.content}}                           
+                        </li>
+                        <br>
                         {% endif %}
                     {% endfor %}
                 </ul>
-                <textarea disabled
-                    name="snack_content" id ="snack_content" class="form-control mb-2"></textarea>
+                <textarea disabled name="snack_content" id ="snack_content" class="form-control mb-2"></textarea>
                 {% else %}
+                {% include "form_errors.html" %}
                 <form method="post">
                     <ul>
                         {% for each_data in snack_all_data %}
-                            {% if each_data.id_user == name %}
-                            <li>{{each_data.content}}</li>
+                            {% if each_data.username_user == name %}
+                            <li>
+                                <div style="float:left;">
+                                {{each_data.content}}
+                                </div>
+                                <div style="float:right;">
+                                    <a href="{{ url_for('date.delete_snack_function', snack_id = each_data.id)+'?dates'+'=%s-%s-%s' %(year, month, day) }}" 
+                                    class="btn btn-sm btn-outline-secondary">삭제</a>
+                                </div>
+                            </li>
+                            <br>
                             {% endif %}
                         {% endfor %}
                     </ul>
@@ -51,3 +62,20 @@
 {% endif %}
 
 {% endblock first_body %}
+
+
+
+
+<!--
+    개행없이 한줄에 왼쪽 오른쪽으로 넣을려고 노력한 흔적
+<div style="text-align:right">
+    <a href="#" class="btn btn-sm btn-outline-secondary">삭제</a>
+</div>
+
+<span style="width:49%;">
+{{each_data.content}}
+</span>
+<span style="float:right;width:49%;">
+    <a href="#" class="btn btn-sm btn-outline-secondary">삭제</a>
+</span>
+-->

@@ -32,9 +32,10 @@ class Each_snack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(200), nullable=False)
         
-    id_user = db.Column(db.Integer, db.ForeignKey('user.username'), nullable=False)
+    username_user = db.Column(db.String(150), db.ForeignKey('user.username'), nullable=False)
     a_user = db.relationship('User', backref=db.backref('snack_user_set', ))
 
     content = db.Column(db.Text(), nullable=False)
 
+#id_user
 
