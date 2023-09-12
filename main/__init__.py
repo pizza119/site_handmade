@@ -41,11 +41,12 @@ def create_app():
     app.jinja_env.filters["check"] = check
 
     #블루프린트
-    from .views import dates, day, main_views, auth
+    from .views import dates, day, main_views, auth, notice
     app.register_blueprint(dates.bp)
     app.register_blueprint(day.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(main_views.bp)
+    app.register_blueprint(notice.bp)
 
     return app
 
